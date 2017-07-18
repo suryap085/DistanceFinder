@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/menu_rate_us"
+        android:icon="@drawable/ic_menu_rateus"
+        android:orderInCategory="102"
+        android:showAsAction="always"
+        android:title="@string/rateUs">
+    </item>
+    <item
+        android:id="@+id/share"
+        android:actionProviderClass="android.widget.ShareActionProvider"
+        android:icon="@android:drawable/ic_menu_share"
+        android:title="@string/share"/>
+    <item
+        android:id="@+id/more"
+        android:icon="@android:drawable/ic_menu_more"
+        android:showAsAction="always"
+        android:title="@string/morebydeveloper"/>
+
+</menu>
