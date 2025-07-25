@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group android:scaleX="0.7"
+        android:scaleY="0.7"
+        android:pivotX="54"
+        android:pivotY="54">
+        <!-- Location pin -->
+        <path
+            android:fillColor="@android:color/white"
+            android:pathData="M54,20c-8.8,0 -16,7.2 -16,16c0,12 16,32 16,32s16,-20 16,-32c0,-8.8 -7.2,-16 -16,-16zM54,42c-3.3,0 -6,-2.7 -6,-6s2.7,-6 6,-6s6,2.7 6,6s-2.7,6 -6,6z"/>
+        <!-- Compass needle -->
+        <path
+            android:fillColor="@android:color/white"
+            android:pathData="M54,60l-6,20l12,0z"/>
+        <!-- Distance lines -->
+        <path
+            android:fillColor="@android:color/white"
+            android:pathData="M20,70h15m43,0h15M20,75h12m49,0h12M20,80h10m53,0h10"
+            android:strokeWidth="2"
+            android:strokeColor="@android:color/white"/>
+    </group>
+</vector>
