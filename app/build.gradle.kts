@@ -16,37 +16,89 @@ android {
         applicationId = "com.location.distancefinder"
         minSdk = 24
         targetSdk = 35
-        versionCode = 5
-        versionName = "2.0"
+        versionCode = 10
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
+        
+        // Ensure 64-bit architecture support
+        ndk {
+            abiFilters += listOf("arm64-v8a", "x86_64")
+        }
+        
+        // Privacy and security
+        manifestPlaceholders["appAuthRedirectScheme"] = applicationId
+    }
+
+    signingConfigs {
+        create("release") {
+            // These will be provided via environment variables or keystore
+            storeFile = file(project.findProperty("RELEASE_STORE_FILE") ?: "release-keystore.jks")
+            storePassword = project.findProperty("RELEASE_STORE_PASSWORD") as String? ?: ""
+            keyAlias = project.findProperty("RELEASE_KEY_ALIAS") as String? ?: ""
+            keyPassword = project.findProperty("RELEASE_KEY_PASSWORD") as String? ?: ""
+        }
     }
 
     buildTypes {
+        debug {
+            isDebuggable = true
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+            isMinifyEnabled = false
+            manifestPlaceholders["enableCrashReporting"] = false
+        }
+        
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            isDebuggable = false
+            
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            
+            signingConfig = signingConfigs.getByName("release")
+            manifestPlaceholders["enableCrashReporting"] = true
+            
+            // Bundle optimization
+            bundle {
+                language {
+                    enableSplit = true
+                }
+                density {
+                    enableSplit = true
+                }
+                abi {
+                    enableSplit = true
+                }
+            }
         }
-        debug {
-            isDebuggable = true
-            applicationIdSuffix = ".debug"
+        
+        create("benchmark") {
+            initWith(buildTypes.getByName("release"))
+            matchingFallbacks += listOf("release")
+            isDebuggable = false
         }
     }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
         jvmTarget = "17"
+        freeCompilerArgs += listOf(
+            "-opt-in=kotlin.RequiresOptIn",
+            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+            "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi"
+        )
     }
 
     buildFeatures {
@@ -61,11 +113,43 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/DEPENDENCIES"
+            excludes += "/META-INF/LICENSE"
+            excludes += "/META-INF/LICENSE.txt"
+            excludes += "/META-INF/license.txt"
+            excludes += "/META-INF/NOTICE"
+            excludes += "/META-INF/NOTICE.txt"
+            excludes += "/META-INF/notice.txt"
+            excludes += "/META-INF/ASL2.0"
+            excludes += "/META-INF/*.kotlin_module"
+        }
+    }
+    
+    // Play Store requirements
+    bundle {
+        storeArchive {
+            enable = false
+        }
+    }
+    
+    lint {
+        checkReleaseBuilds = true
+        abortOnError = false
+        warningsAsErrors = false
+        disable += listOf("MissingTranslation", "ExtraTranslation")
+    }
+    
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
         }
     }
 }
 
 dependencies {
+    // Core library desugaring for API compatibility
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.2")
+    
     // Compose BOM
     implementation(platform("androidx.compose:compose-bom:2024.12.01"))
     implementation("androidx.compose.ui:ui")
@@ -119,27 +203,51 @@ dependencies {
     // Image Loading
     implementation("io.coil-kt:coil-compose:2.7.0")
     
+    // Security
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+    
+    // App Startup
+    implementation("androidx.startup:startup-runtime:1.2.0")
+    
+    // WorkManager (for background tasks)
+    implementation("androidx.work:work-runtime-ktx:2.9.1")
+    implementation("androidx.hilt:hilt-work:1.2.0")
+    
+    // Performance monitoring
+    implementation("androidx.tracing:tracing:1.2.0")
+    
     // Testing
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-core:5.14.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+    testImplementation("com.google.truth:truth:1.4.4")
     
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.12.01"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.52")
+    androidTestImplementation("androidx.test:runner:1.6.2")
+    androidTestImplementation("androidx.test:rules:1.6.1")
+    androidTestImplementation("androidx.work:work-testing:2.9.1")
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.52")
     
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14")
 }
 
 // Allow references to generated code
 kapt {
     correctErrorTypes = true
+    useBuildCache = true
 }
 
 secrets {
     defaultPropertiesFileName = "secrets.defaults.properties"
+    ignoreList.add("keyAlias")
+    ignoreList.add("keyPassword")
+    ignoreList.add("storeFile")
+    ignoreList.add("storePassword")
 }

@@ -211,6 +211,31 @@ The project follows official Android Kotlin style guidelines:
    - Screen reader optimization
    - High contrast themes
 
+## 🚀 Play Store Release
+
+This app is now **production-ready** for Google Play Store release! 
+
+### Quick Release Steps
+1. **Generate keystore:** `./scripts/generate_keystore.sh`
+2. **Prepare release:** `./scripts/prepare_release.sh` 
+3. **Follow guide:** See `PLAY_STORE_RELEASE_GUIDE.md` for complete instructions
+
+### Play Store Compliance ✅
+- [x] **Target SDK 35** (Android 15) - Required by August 2025
+- [x] **App Bundle (AAB)** format with optimizations
+- [x] **64-bit architecture** support
+- [x] **Privacy Policy** and Data Safety declarations
+- [x] **Modern UI/UX** with Material Design 3
+- [x] **Edge-to-edge** display for Android 15
+- [x] **Security hardened** with network security config
+- [x] **Performance optimized** with ProGuard/R8
+
+### Files Ready for Release
+- 📦 **App Bundle:** Generated via `./scripts/prepare_release.sh`
+- 📝 **Privacy Policy:** `privacy-policy.md`
+- 📋 **Release Guide:** `PLAY_STORE_RELEASE_GUIDE.md`
+- 🔐 **Signing Scripts:** `scripts/generate_keystore.sh`
+
 ## 🤝 Contributing
 
 1. Fork the repository

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="map"
+        android:enabled="true"
+        android:icon="@drawable/ic_map_shortcut"
+        android:shortcutShortLabel="@string/nav_map"
+        android:shortcutLongLabel="@string/nav_map"
+        android:shortcutDisabledMessage="@string/nav_map">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.location.distancefinder"
+            android:targetClass="com.location.distancefinder.presentation.MainActivity">
+            <extra
+                android:name="destination"
+                android:value="map" />
+        </intent>
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="search"
+        android:enabled="true"
+        android:icon="@drawable/ic_search_shortcut"
+        android:shortcutShortLabel="@string/nav_search"
+        android:shortcutLongLabel="@string/nav_search"
+        android:shortcutDisabledMessage="@string/nav_search">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.location.distancefinder"
+            android:targetClass="com.location.distancefinder.presentation.MainActivity">
+            <extra
+                android:name="destination"
+                android:value="search" />
+        </intent>
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="favorites"
+        android:enabled="true"
+        android:icon="@drawable/ic_favorite_shortcut"
+        android:shortcutShortLabel="@string/nav_favorites"
+        android:shortcutLongLabel="@string/nav_favorites"
+        android:shortcutDisabledMessage="@string/nav_favorites">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.location.distancefinder"
+            android:targetClass="com.location.distancefinder.presentation.MainActivity">
+            <extra
+                android:name="destination"
+                android:value="favorites" />
+        </intent>
+    </shortcut>
+</shortcuts>
